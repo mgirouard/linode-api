@@ -9,6 +9,10 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "4.*"
+        "guzzlehttp/guzzle": "4.*",
+        "symfony/console": "2.5.*"
+    },
+    "autoload": {
+        "psr-0": { "mgirouard": "src/" }
     }
 }
