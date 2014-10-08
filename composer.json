@@ -1,0 +1,14 @@
+{
+    "name": "mgirouard/linode-api",
+    "description": "A modern PHP implementation of the Linode API",
+    "license": "http://www.opensource.org/licenses/bsd-license.php New BSD License",
+    "authors": [
+        {
+            "name": "Michael Girouard",
+            "email": "mgirouard@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzle/guzzle": "3.9"
+    }
+}
