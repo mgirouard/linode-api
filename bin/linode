@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+# vim: set ft=php
+
+use mgirouard\Linode\Console\Application;
+
+require __DIR__ . '/../vendor/autoload.php';
+define('LINODE_API_KEY', getenv('LINODE_API_KEY'));
+
+$app = new Application(json_decode(file_get_contents(__DIR__ . '/../res/api-spec.json')));
+$app->run();
