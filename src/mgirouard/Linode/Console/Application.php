@@ -23,6 +23,9 @@ class Application extends BaseApplication
             $command->setDescription($method->DESCRIPTION);
             $requiredParams = [];
 
+            $command->addOption('DATA', null, InputOption::VALUE_REQUIRED, 
+                'Arbitrary query data. Must be in the form of valid query string key=value pairs.');
+
             foreach ($method->PARAMETERS as $param) {
                 $command->addOption(
                     $param->NAME,
@@ -46,10 +49,17 @@ class Application extends BaseApplication
                     foreach ($requiredParams as $required) {
                         if (!$input->hasOption($required) || !$input->getOption($required)) {
                             $missing[] = $required;
+                            continue;
                         }
+
+                        $query->set($required, $input->getOption($required));
                     }
 
                     if (!empty($missing)) throw new \RuntimeException('Missing Parameters: ' . implode(', ', $missing));
+
+                    if ($data = $input->getOption('DATA')) {
+                        $request->setUrl($request->getUrl() . '&' . $data);
+                    }
 
                     $response = $client->send($request);
                     $output->writeln((string) $response->getBody());
