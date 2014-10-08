@@ -18,7 +18,7 @@ class Application extends BaseApplication
         if (empty($spec->DATA->METHODS)) throw new \InvalidArgumentException('Bad spec supplied');
 
         foreach ($spec->DATA->METHODS as $name => $method) {
-            $command = new Command(str_replace('.', ':', $name));
+            $command = new Command($name);
             $command->setDescription($method->DESCRIPTION);
 
             foreach ($method->PARAMETERS as $param) {
