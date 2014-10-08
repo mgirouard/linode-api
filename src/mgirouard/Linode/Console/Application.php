@@ -21,6 +21,7 @@ class Application extends BaseApplication
         foreach ($spec->DATA->METHODS as $name => $method) {
             $command = new Command($name);
             $command->setDescription($method->DESCRIPTION);
+            $requiredParams = [];
 
             foreach ($method->PARAMETERS as $param) {
                 $command->addOption(
@@ -29,15 +30,31 @@ class Application extends BaseApplication
                     InputOption::VALUE_REQUIRED,
                     $param->DESCRIPTION
                 );
+
+                if ($param->REQUIRED) $requiredParams[] = $param->NAME;
             }
 
-            $command->setCode(function (InputInterface $input, OutputInterface $output) use ($name, $client) {
-                $request = $client->createRequest('GET');
-                $request->getQuery()->set('api_action', $name);
-                $response = $client->send($request);
+            $command->setCode(
+                function (InputInterface $input, OutputInterface $output) 
+                use ($name, $client, $requiredParams) 
+                {
+                    $request = $client->createRequest('GET');
+                    $query = $request->getQuery();
+                    $query->set('api_action', $name);
+                    $missing = [];
 
-                $output->writeln((string) $response->getBody());
-            });
+                    foreach ($requiredParams as $required) {
+                        if (!$input->hasOption($required) || !$input->getOption($required)) {
+                            $missing[] = $required;
+                        }
+                    }
+
+                    if (!empty($missing)) throw new \RuntimeException('Missing Parameters: ' . implode(', ', $missing));
+
+                    $response = $client->send($request);
+                    $output->writeln((string) $response->getBody());
+                }
+            );
 
             $this->add($command);
         }
