@@ -30,8 +30,8 @@ class Application extends BaseApplication
                 );
             }
 
-            $command->setCode(function (InputInterface $input, OutputInterface $output) use ($client) {
-                $output->writeln('It works!');
+            $command->setCode(function (InputInterface $input, OutputInterface $output) use ($name, $client) {
+                $output->writeln($name . ': It works!');
             });
 
             $this->add($command);
