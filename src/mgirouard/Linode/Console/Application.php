@@ -3,6 +3,7 @@
 namespace mgirouard\Linode\Console;
 
 use GuzzleHttp\Client;
+
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,7 +14,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 
 class Application extends BaseApplication
 {
-    public function __construct($spec, Client $client)
+    public function __construct(Client $client, $spec)
     {
         if (empty($spec->DATA->METHODS)) throw new \InvalidArgumentException('Bad spec supplied');
 
@@ -31,7 +32,11 @@ class Application extends BaseApplication
             }
 
             $command->setCode(function (InputInterface $input, OutputInterface $output) use ($name, $client) {
-                $output->writeln($name . ': It works!');
+                $request = $client->createRequest('GET');
+                $request->getQuery()->set('api_action', $name);
+                $response = $client->send($request);
+
+                $output->writeln((string) $response->getBody());
             });
 
             $this->add($command);
