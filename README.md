@@ -17,6 +17,12 @@ Clone the repo and install the dependencies:
     cd linode-api
     composer.phar install
 
+Set up your environment by adding your API key to a `.env` file in the project
+root. Use the `.env.dist` as a boilerplate.
+
+    cp .env.dist .env
+    $EDITOR .env
+
 Usage
 -----
 
@@ -28,9 +34,3 @@ of available API calls.
 To get help on a particular command, you can use the `help` subcommand:
 
     bin/linode help linode.resize
-
-In order to perform any request, you'll need to tell the executable your API
-key. At present it expects an environmental variable to be set:
-
-    export LINODE_API_KEY=thisisnotarealapikey
-    bin/linode test.echo --DATA='foo=bar'
