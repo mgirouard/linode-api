@@ -4,7 +4,13 @@
 
 use GuzzleHttp\Client;
 use mgirouard\Linode\Console\Application;
+use Dotenv\Dotenv as Env;
+
 require __DIR__ . '/../vendor/autoload.php';
+
+$env = new Env(dirname(__DIR__));
+$env->load();
+$env->required('LINODE_API_KEY');
 
 $app = new Application(
     new Client(['base_url' => 'https://api.linode.com/?api_key=' . getenv('LINODE_API_KEY')]),
